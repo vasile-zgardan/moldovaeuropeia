@@ -36,6 +36,10 @@ footer span.text-blue-500{color:var(--accent-yellow);}
 /* Vídeo do hero: quadrado por defeito, 5:4 na versão romena */
 #hero-container{width:100%;aspect-ratio:1/1;}
 #hero-container.video-ro{aspect-ratio:5/4;}
+
+/* Controlos do vídeo: escondidos por defeito; o JS junta .show-controls ao contentor */
+#hero-controls{opacity:0;pointer-events:none;}
+#hero-container.show-controls #hero-controls{opacity:1;pointer-events:auto;}
 @media(min-width:1024px){
     #hero-container{width:480px;height:480px;}
     #hero-container.video-ro{width:600px;height:480px;}
@@ -274,7 +278,7 @@ body.modal-open{overflow:hidden;}
                 <!-- ===================== CONTROLOS ===================== -->
                 <div
                     id="hero-controls"
-                    class="absolute inset-x-0 bottom-0 p-4 pt-14 bg-gradient-to-t from-black/85 via-black/40 to-transparent opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-300"
+                    class="absolute inset-x-0 bottom-0 p-4 pt-14 bg-gradient-to-t from-black/85 via-black/40 to-transparent transition-opacity duration-300"
                 >
 
                     <div class="flex items-center gap-3 text-white">
@@ -2324,10 +2328,12 @@ applyLanguage("pt");
 <script>
 (function () {
     const video = document.getElementById("hero-video");
+    const container = document.getElementById("hero-container");
     if (!video) return;
 
     video.volume = 0.5;
 
+    /* ---------- SOM ---------- */
     /* 1.º: tenta arrancar com som */
     video.muted = false;
     video.play().catch(() => {
@@ -2335,14 +2341,53 @@ applyLanguage("pt");
         video.muted = true;
         video.play().catch(() => {});
 
-        const eventos = ["click", "touchend", "keydown"];
+        const eventos = ["pointerdown", "click", "touchstart", "touchend", "keydown"];
         function ativarSom() {
             video.muted = false;
             video.volume = 0.5;
-            eventos.forEach(ev => document.removeEventListener(ev, ativarSom));
+            video.play().catch(() => {});
+            eventos.forEach(ev => document.removeEventListener(ev, ativarSom, true));
         }
-        eventos.forEach(ev => document.addEventListener(ev, ativarSom));
+        eventos.forEach(ev => document.addEventListener(ev, ativarSom, true));
     });
+
+    /* ---------- BARRA DE CONTROLOS: some ao fim de 2 s ou quando o rato sai ---------- */
+    if (!container) return;
+
+    const HIDE_DELAY = 2000;
+    let timer = null;
+    let aInteragir = false; /* a arrastar a barra do vídeo ou do volume */
+
+    function mostrar() {
+        container.classList.add("show-controls");
+        clearTimeout(timer);
+        timer = setTimeout(esconder, HIDE_DELAY);
+    }
+    function esconder() {
+        if (aInteragir) { timer = setTimeout(esconder, HIDE_DELAY); return; }
+        container.classList.remove("show-controls");
+        clearTimeout(timer);
+    }
+
+    container.addEventListener("pointerenter", mostrar);
+    container.addEventListener("pointermove", mostrar);
+    container.addEventListener("pointerdown", mostrar);
+    container.addEventListener("pointerleave", (e) => {
+        if (e.pointerType === "mouse") { aInteragir = false; esconder(); }
+    });
+    container.addEventListener("focusin", mostrar);
+
+    const controlos = document.getElementById("hero-controls");
+    if (controlos) {
+        controlos.addEventListener("pointerdown", () => { aInteragir = true; });
+    }
+    document.addEventListener("pointerup", () => {
+        if (aInteragir) { aInteragir = false; mostrar(); }
+    });
+    document.addEventListener("pointercancel", () => { aInteragir = false; });
+
+    /* À entrada no site mostra a barra e esconde-a ao fim de 2 s */
+    mostrar();
 })();
 </script>
 
