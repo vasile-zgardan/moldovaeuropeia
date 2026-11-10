@@ -33,17 +33,22 @@ tailwind.config = {
 #agenda .bg-slate-50.p-6 h3{color:#0756A5;}
 footer span.text-blue-500{color:var(--accent-yellow);}
 
-/* Vídeo do hero: quadrado por defeito, 5:4 na versão romena */
-#hero-container{width:100%;aspect-ratio:1/1;}
-#hero-container.video-ro{aspect-ratio:5/4;}
-
-/* Controlos do vídeo: escondidos por defeito; o JS junta .show-controls ao contentor */
-#hero-controls{opacity:0;pointer-events:none;}
-#hero-container.show-controls #hero-controls{opacity:1;pointer-events:auto;}
-@media(min-width:1024px){
-    #hero-container{width:480px;height:480px;}
-    #hero-container.video-ro{width:600px;height:480px;}
-}
+/* ===== GALERIA COM SETAS + MOVIMENTO AUTOMÁTICO ===== */
+.gallery-scroller{display:flex;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}
+.gallery-scroller::-webkit-scrollbar{display:none;}
+.gallery-item{flex:0 0 auto;width:min(30rem,82vw);height:clamp(15rem,50vw,22rem);margin-right:1.25rem;border-radius:1.25rem;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);}
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.gallery-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;
+    background:rgba(255,255,255,.08);border:1px dashed rgba(255,255,255,.35);color:rgba(255,255,255,.7);font-size:.9rem;box-shadow:none;}
+.gallery-placeholder i{font-size:2.25rem;}
+.gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:3.25rem;height:3.25rem;border-radius:9999px;
+    background:rgba(255,255,255,.92);color:#0756A5;display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+    box-shadow:0 6px 18px rgba(0,0,0,.35);transition:background .2s,transform .2s;}
+.gallery-arrow:hover{background:#fff;transform:translateY(-50%) scale(1.08);}
+.gallery-arrow:focus-visible{outline:3px solid #8FE0FA;outline-offset:2px;}
+.gallery-arrow.prev{left:.75rem;}
+.gallery-arrow.next{right:.75rem;}
+@media(min-width:1024px){.gallery-arrow.prev{left:1.5rem;}.gallery-arrow.next{right:1.5rem;}}
 </style>
 
 <!-- Font Awesome -->
@@ -76,14 +81,13 @@ body.modal-open{overflow:hidden;}
         </div>
 
         <nav class="hidden md:flex flex-1 items-center justify-center space-x-6 lg:space-x-8 font-medium text-sm text-slate-600">
+            <a href="#noticia" class="hover:text-blue-600 transition whitespace-nowrap" data-i18n="nav_noticia">Declaração</a>
+            <a href="#galeria" class="hover:text-blue-600 transition whitespace-nowrap" data-i18n="nav_galeria">Galeria</a>
             <a href="#sobre" class="hover:text-blue-600 transition whitespace-nowrap" data-i18n="nav_sobre">Sobre</a>
             <a href="#oradores" class="hover:text-blue-600 transition whitespace-nowrap" data-i18n="nav_oradores">Oradores</a>
             <a href="#agenda" class="hover:text-blue-600 transition whitespace-nowrap" data-i18n="nav_agenda">Agenda</a>
             <a href="#localizacao" class="hover:text-blue-600 transition whitespace-nowrap" data-i18n="nav_localizacao">Localização</a>
             <a href="#organizacoes" class="hover:text-blue-600 transition whitespace-nowrap" data-i18n="nav_organizacoes">Organizações e Parceiros</a>
-            <a href="https://forms.cloud.microsoft/r/VPWMFaQq46" target="_blank" rel="noopener noreferrer" id="btn-inscricao"
-               class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-full text-sm shadow-md shadow-blue-500/20 transition whitespace-nowrap"
-               data-i18n="btn_inscrever">Inscrever-se</a>
         </nav>
 
         <div class="flex items-center gap-2 sm:gap-4 shrink-0 ml-auto">
@@ -127,6 +131,24 @@ body.modal-open{overflow:hidden;}
         </div>
 
         <nav class="p-3">
+            <a href="#noticia" class="mobile-nav-link flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-blue-50 active:bg-blue-50 transition group">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition"><i class="fa-solid fa-newspaper"></i></div>
+                <div class="flex-1">
+                    <span class="block font-bold text-slate-900 text-sm" data-i18n="nav_noticia">Declaração</span>
+                    <span class="block text-xs text-slate-500 mt-0.5" data-i18n="mobile_noticia_desc">Declaração adotada pela comunidade</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+            </a>
+
+            <a href="#galeria" class="mobile-nav-link flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-blue-50 active:bg-blue-50 transition group">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition"><i class="fa-solid fa-images"></i></div>
+                <div class="flex-1">
+                    <span class="block font-bold text-slate-900 text-sm" data-i18n="nav_galeria">Galeria</span>
+                    <span class="block text-xs text-slate-500 mt-0.5" data-i18n="mobile_galeria_desc">Fotografias do evento</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+            </a>
+
             <a href="#sobre" class="mobile-nav-link flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-blue-50 active:bg-blue-50 transition group">
                 <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition"><i class="fa-solid fa-circle-info"></i></div>
                 <div class="flex-1">
@@ -172,13 +194,6 @@ body.modal-open{overflow:hidden;}
                 <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
             </a>
         </nav>
-
-        <div class="px-4 pb-4">
-            <a href="https://forms.cloud.microsoft/r/VPWMFaQq46" target="_blank" rel="noopener noreferrer" class="mobile-nav-link w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-md transition text-sm">
-                <i class="fa-solid fa-ticket"></i>
-                <span data-i18n="btn_inscrever">Inscrever-se</span>
-            </a>
-        </div>
     </div>
 </div>
 
@@ -212,46 +227,15 @@ body.modal-open{overflow:hidden;}
 
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="#agenda" class="bg-white/10 hover:bg-white/20 border border-white/60 text-white font-semibold px-7 py-3 rounded-xl shadow-lg transition" data-i18n="btn_agenda">Ver Agenda</a>
-                <a href="https://forms.cloud.microsoft/r/VPWMFaQq46" target="_blank" rel="noopener noreferrer"
-                   class="bg-white text-blue-900 hover:bg-blue-50 font-semibold px-7 py-3 rounded-xl shadow-lg transition" data-i18n="btn_garantir">Garantir Lugar</a>
             </div>
         </div>
 
-        <!-- LADO DIREITO: VÍDEO -->
+        <!-- LADO DIREITO: FOTO (substitui o vídeo) -->
         <div class="w-full lg:w-auto lg:shrink-0 flex items-center justify-center">
-
-            <div id="hero-container" class="group relative overflow-hidden rounded-2xl shadow-2xl border-2 border-white/30 bg-blue-950">
-
-                <video id="hero-video" class="absolute inset-0 w-full h-full object-cover"
-                    src="https://pub-2744c7b19363448b902c1ee8ac751cb2.r2.dev/videopt.mp4"
-                    poster="poster.jpg" autoplay loop playsinline preload="metadata"></video>
-
-                <!-- CONTROLOS -->
-                <div id="hero-controls" class="absolute inset-x-0 bottom-0 p-4 pt-14 bg-gradient-to-t from-black/85 via-black/40 to-transparent transition-opacity duration-300">
-                    <div class="flex items-center gap-3 text-white">
-
-                        <button id="hero-play-btn" type="button" class="flex-shrink-0 w-7 h-7 flex items-center justify-center hover:text-blue-300 transition" aria-label="Pausar vídeo">
-                            <i id="hero-play-icon" class="fa-solid fa-pause"></i>
-                        </button>
-
-                        <span id="hero-current" class="text-xs whitespace-nowrap">0:00</span>
-
-                        <input id="hero-seek" type="range" min="0" max="100" value="0" step="0.1"
-                               class="flex-1 min-w-0 cursor-pointer accent-white"
-                               aria-label="Progresso do vídeo" data-i18n-attr="aria-label" data-i18n="video_seek">
-
-                        <span id="hero-duration" class="text-xs whitespace-nowrap">0:00</span>
-
-                        <button id="hero-mute-btn" type="button" class="flex-shrink-0 w-7 h-7 flex items-center justify-center hover:text-blue-300 transition" aria-label="Ativar som">
-                            <i id="hero-volume-icon" class="fa-solid fa-volume-xmark"></i>
-                        </button>
-
-                        <input id="hero-volume" type="range" min="0" max="1" value="0.5" step="0.05"
-                               class="w-16 cursor-pointer accent-white"
-                               aria-label="Volume do vídeo" data-i18n-attr="aria-label" data-i18n="video_volume">
-                    </div>
-                </div>
-
+            <div class="relative overflow-hidden rounded-2xl shadow-2xl border-2 border-white/30 bg-blue-950 w-full max-w-xl lg:w-[560px]">
+                <img src="organi.jpg" alt="Organização da Conferência «Moldova Europeia»"
+                     data-i18n-attr="alt" data-i18n="hero_photo_alt"
+                     class="block w-full h-auto">
             </div>
         </div>
 
@@ -259,110 +243,70 @@ body.modal-open{overflow:hidden;}
 </section>
 
 
-<!-- ===================== CONTROLOS DO VÍDEO ===================== -->
-<script>
-(() => {
+<!-- ===================== COMUNICADO / DECLARAÇÃO ===================== -->
+<section id="noticia" class="py-16 md:py-20 bg-white border-b border-slate-200">
+    <article class="max-w-4xl mx-auto px-6">
 
-    const video = document.getElementById('hero-video');
-    const playBtn = document.getElementById('hero-play-btn');
-    const playIcon = document.getElementById('hero-play-icon');
-    const muteBtn = document.getElementById('hero-mute-btn');
-    const volumeIcon = document.getElementById('hero-volume-icon');
-    const seek = document.getElementById('hero-seek');
-    const volume = document.getElementById('hero-volume');
-    const current = document.getElementById('hero-current');
-    const duration = document.getElementById('hero-duration');
+        <span class="text-blue-600 font-semibold text-sm uppercase tracking-wider" data-i18n="news_tag">Comunicado</span>
+        <h2 class="text-2xl md:text-4xl font-extrabold text-slate-900 mt-2 mb-4 leading-tight" data-i18n="news_title">Cidadãos moldavos reunidos em Portugal adotaram por unanimidade uma declaração de apoio à adesão da República da Moldova à UE</h2>
 
-    if (!video) return;
+        <p class="flex items-center gap-2 text-sm text-slate-500 mb-8">
+            <i class="fa-solid fa-location-dot text-blue-600"></i>
+            <span data-i18n="news_dateline">Loures, República Portuguesa, 8 de novembro de 2026</span>
+        </p>
 
-    /* Vai buscar o texto traduzido (as traduções são definidas mais abaixo) */
-    const tr = (k, fb) =>
-        (typeof translations !== 'undefined' &&
-         translations[document.documentElement.lang]?.[k]) || fb;
+        <div class="space-y-5 text-slate-700 leading-relaxed text-base md:text-lg text-justify" style="hyphens:auto;-webkit-hyphens:auto;">
 
-    const formatTime = (seconds) => {
-        if (!Number.isFinite(seconds)) return '0:00';
-        const minutes = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${minutes}:${String(secs).padStart(2, '0')}`;
-    };
+            <p class="font-semibold text-slate-900" data-i18n="news_p1">Os participantes na conferência «Moldova Europeia» adotaram por unanimidade uma declaração de apoio à adesão da República da Moldova à União Europeia. Os promotores desejam que o exemplo seja seguido por outras comunidades moldavas da diáspora, expressando o seu apoio à adesão e envolvendo-se em projetos que contribuam para o desenvolvimento do país.</p>
 
-    function updateTime() {
-        const total = video.duration || 0;
-        current.textContent = formatTime(video.currentTime);
-        duration.textContent = formatTime(total);
-        if (document.activeElement !== seek) {
-            seek.value = total ? (video.currentTime / total) * 100 : 0;
-        }
-    }
+            <p data-i18n="news_p2">O evento reuniu representantes da comunidade moldava, das instituições públicas da República da Moldova e de Portugal, do corpo diplomático e do meio empresarial, para debater a integração europeia e as oportunidades de cooperação entre os dois países.</p>
 
-    function updatePlayButton() {
-        if (video.paused) {
-            playIcon.className = 'fa-solid fa-play';
-            playBtn.setAttribute('aria-label', tr('video_play', 'Reproduzir vídeo'));
-        } else {
-            playIcon.className = 'fa-solid fa-pause';
-            playBtn.setAttribute('aria-label', tr('video_pause', 'Pausar vídeo'));
-        }
-    }
+            <p data-i18n="news_p3">Através da Declaração da comunidade de cidadãos da República da Moldova em Portugal sobre o apoio firme à adesão da República da Moldova à União Europeia, a comunidade transmite uma mensagem de solidariedade e de assunção de um papel ativo na construção do futuro europeu do país. O gesto mostra que a ligação à Moldova pode ser valorizada através do envolvimento cívico, da competência técnica e de iniciativas que apoiam a aproximação à União Europeia.</p>
 
-    playBtn.addEventListener('click', () => {
-        if (video.paused) video.play().catch(() => {});
-        else video.pause();
-    });
+            <p data-i18n="news_p4">O Presidente do Parlamento da República da Moldova, Igor Grosu, e o Primeiro-Ministro Vasile Tofan enviaram aos participantes mensagens de apoio, sublinhando que os cidadãos da diáspora podem contribuir para o desenvolvimento da República da Moldova independentemente do país onde residam.</p>
 
-    seek.addEventListener('input', () => {
-        if (Number.isFinite(video.duration) && video.duration > 0) {
-            video.currentTime = (Number(seek.value) / 100) * video.duration;
-        }
-    });
+            <p data-i18n="news_p5">A Vice-Primeira-Ministra para a Integração Europeia, Cristina Gherasimov, interveio em direto e falou sobre as prioridades das negociações de adesão e o contributo dos profissionais da diáspora para este processo.</p>
 
-    function updateVolumeIcon() {
-        const mudo = video.muted || video.volume === 0;
-        volumeIcon.className = mudo
-            ? 'fa-solid fa-volume-xmark'
-            : (video.volume < 0.5 ? 'fa-solid fa-volume-low' : 'fa-solid fa-volume-high');
-        muteBtn.setAttribute('aria-label',
-            mudo ? tr('sound_on', 'Ativar som') : tr('sound_off', 'Desativar som'));
-    }
+            <blockquote class="border-l-4 border-blue-600 bg-blue-50 rounded-r-2xl px-6 py-5 space-y-4 text-slate-800 italic">
+                <p data-i18n="news_q1">«Agradeço esta declaração de apoio ao percurso europeu da República da Moldova. Recebo esta mensagem com gratidão e com a confiança de que a amizade entre as nossas comunidades pode aproximar ainda mais os nossos países.</p>
+                <p data-i18n="news_q2">Para os cidadãos da República da Moldova, a vossa solidariedade conta. Encoraja-nos a continuar as reformas e reforça a nossa convicção de que o nosso esforço é compreendido e apoiado por amigos que desejam ver-nos na União Europeia.</p>
+                <p data-i18n="news_q3">Esta declaração tem um significado especial porque vem de uma comunidade em que moldavos e portugueses construíram laços através do trabalho, da amizade e de experiências partilhadas. É um apoio que nasce das pessoas e que dá profundidade à relação entre os nossos países», transmitiu a Vice-Primeira-Ministra para a Integração Europeia.</p>
+            </blockquote>
 
-    muteBtn.addEventListener('click', () => {
-        video.muted = !video.muted;
-        if (!video.muted && video.volume === 0) {
-            video.volume = 0.5;
-            volume.value = 0.5;
-        }
-        updateVolumeIcon();
-    });
+            <p data-i18n="news_p6">O programa incluiu mensagens do deputado Valeriu Robu e do cônsul Valentin Munteanu, Primeiro Secretário da Embaixada da República da Moldova em Portugal, bem como intervenções de Marina Bunduchi, consultora principal do Gabinete de Relações com a Diáspora, de Ana Sandra, diretora do Instituto Nacional de Turismo, e de Luminița-Dorina Gudima, especialista principal na atração de investimento da Agência de Investimento «Invest Moldova».</p>
 
-    volume.addEventListener('input', () => {
-        video.volume = Number(volume.value);
-        video.muted = video.volume === 0;
-        updateVolumeIcon();
-    });
+            <p data-i18n="news_p7">Dirigiram-se também aos presentes, com mensagens de apoio, a Embaixadora da Roménia na República Portuguesa, Daniela Gîtman, e a vice-presidente do município de Loures, Sónia Paixão.</p>
 
-    video.addEventListener('timeupdate', updateTime);
-    video.addEventListener('loadedmetadata', updateTime);
-    video.addEventListener('durationchange', updateTime);
-    video.addEventListener('play', updatePlayButton);
-    video.addEventListener('pause', updatePlayButton);
-    video.addEventListener('volumechange', updateVolumeIcon);
+            <p data-i18n="news_p8">A perspetiva da sociedade civil da diáspora foi apresentada por Natalia Cucoș, cofundadora da Moldova4EU Diaspora Task Force (Viena, Áustria), e por Angela Zgardan, da Associação da Comunidade da Diáspora (Lisboa, Portugal).</p>
 
-    /* Atualiza os aria-labels quando o idioma muda */
-    document.addEventListener('langchange', () => {
-        updatePlayButton();
-        updateVolumeIcon();
-    });
+            <p data-i18n="news_p9">A conferência foi organizada pela Associação da Comunidade da Diáspora, em parceria com a Liga das Mulheres, com o apoio do Governo da República da Moldova através do programa Diaspora Engagement Hub e com o acolhimento do município de Loures.</p>
 
-    video.volume = 0.5;
-    volume.value = 0.5;
+            <p data-i18n="news_p10">Os organizadores sublinharam que o encontro pretende incentivar tanto a participação cívica da diáspora como os projetos comuns com parceiros da República da Moldova e de Portugal.</p>
+        </div>
+    </article>
+</section>
 
-    updateTime();
-    updatePlayButton();
-    updateVolumeIcon();
 
-})();
-</script>
+<!-- ===================== GALERIA (fotografias do evento) ===================== -->
+<section id="galeria" class="py-20 md:py-28 bg-slate-950 text-white">
+    <div class="max-w-7xl mx-auto px-6 text-center mb-12">
+        <span class="text-blue-300 font-semibold text-sm uppercase tracking-wider" data-i18n="galeria_tag">Fotografias</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold mt-2" data-i18n="galeria_title">Galeria do Evento</h2>
+        <p class="text-blue-100 mt-3 max-w-2xl mx-auto" data-i18n="galeria_desc">Momentos da Conferência «Moldova Europeia»</p>
+    </div>
+
+    <!--
+        ONDE COLOCAR AS FOTOGRAFIAS:
+        No script lá em baixo, procure a lista  const FOTOS = [ ... ];
+        e escreva o nome de cada ficheiro, entre aspas e separado por vírgulas.
+        Enquanto a lista estiver vazia, aparecem blocos de exemplo.
+    -->
+    <div class="relative">
+        <button id="gallery-prev" type="button" class="gallery-arrow prev" aria-label="Fotografia anterior" data-i18n-attr="aria-label" data-i18n="galeria_prev"><i class="fa-solid fa-chevron-left"></i></button>
+        <div id="gallery-scroller" class="gallery-scroller" aria-label="Galeria de fotografias do evento" data-i18n-attr="aria-label" data-i18n="galeria_title"></div>
+        <button id="gallery-next" type="button" class="gallery-arrow next" aria-label="Fotografia seguinte" data-i18n-attr="aria-label" data-i18n="galeria_next"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
 
 
 <!-- ===================== SOBRE ===================== -->
@@ -406,11 +350,7 @@ body.modal-open{overflow:hidden;}
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 
-
-
-
-
-                        <!-- IGOR GROSU -->
+            <!-- IGOR GROSU -->
             <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition flex flex-col">
                 <div class="relative">
                     <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/Igor_GROSU%2C_Fracțiunea_parlamentară_„Partidul_Acțiune_și_Solidaritate”.jpg/960px-Igor_GROSU%2C_Fracțiunea_parlamentară_„Partidul_Acțiune_și_Solidaritate”.jpg"
@@ -443,7 +383,7 @@ body.modal-open{overflow:hidden;}
             <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition flex flex-col">
                 <img src="sonia.jpg" alt="Sónia Lopes" class="w-full h-64 object-cover" style="object-position:center 35%;">
                 <div class="p-6">
-                    <h3 class="text-lg font-bold text-slate-900">Sónia Lopes</h3>
+                    <h3 class="text-lg font-bold text-slate-900">Sónia Paixão</h3>
                     <p class="text-blue-600 text-xs font-semibold mt-2" data-i18n="oradorsonia_cargo">Vice-Presidente da Câmara Municipal de Loures</p>
                 </div>
             </div>
@@ -622,11 +562,7 @@ body.modal-open{overflow:hidden;}
                             <strong class="text-slate-700">Irina Gotișan-Sotnic</strong>
                         </div>
                     </li>
-                    
-                    
-                    
-                    
-                    
+
                     <li class="flex items-center gap-3">
                         <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/Igor_GROSU%2C_Fracțiunea_parlamentară_„Partidul_Acțiune_și_Solidaritate”.jpg/960px-Igor_GROSU%2C_Fracțiunea_parlamentară_„Partidul_Acțiune_și_Solidaritate”.jpg"
                              alt="Igor Grosu" class="w-12 h-12 rounded-full object-cover border-2 border-slate-200 shrink-0">
@@ -668,9 +604,9 @@ body.modal-open{overflow:hidden;}
 
                     <!-- Sónia Lopes -->
                     <li class="flex items-center gap-3">
-                        <img src="sonia.jpg" alt="Sónia Lopes" class="w-12 h-12 rounded-full object-cover border-2 border-slate-200 shrink-0">
+                        <img src="sonia.jpg" alt="Sónia Paixão" class="w-12 h-12 rounded-full object-cover border-2 border-slate-200 shrink-0">
                         <div>
-                            <strong class="text-slate-700" data-i18n="agenda_1430_sonia_name">Sónia Lopes</strong>
+                            <strong class="text-slate-700" data-i18n="agenda_1430_sonia_name">Sónia Paixão</strong>
                             <span> — </span>
                             <span data-i18n="agenda_1430_sonia_cargo">Vice-Presidente da Câmara Municipal de Loures</span>
                         </div>
@@ -732,7 +668,6 @@ body.modal-open{overflow:hidden;}
                         </div>
                     </li>
 
-                    
                 </ul>
             </div>
 
@@ -793,8 +728,6 @@ body.modal-open{overflow:hidden;}
                         </div>
                     </li>
 
-                    
-
                     <!-- Q&A 
                     <li class="flex items-center gap-3">
                         <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
@@ -806,25 +739,21 @@ body.modal-open{overflow:hidden;}
                     </li>
                     -->
 
-                    <ul class="space-y-4 text-slate-600 text-sm">
                     <li class="flex items-center gap-3">
                         <i class="fa-solid fa-check text-blue-500 mt-1"></i>
                         <span data-i18n="agenda_1830_conf">Votação da Declaração da Conferência</span>
                     </li>
-             
+
                 </ul>
             </div>
 
-            <!-- 18:00 — CERIMÓNIA DE ENCERRAMENTO -->
+            <!-- 18:10 — CERIMÓNIA DE ENCERRAMENTO -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <div class="text-blue-600 font-bold text-lg mb-1">18h10</div>
                 <div class="mb-4">
                     <h3 class="text-xl font-bold text-slate-900" data-i18n="agenda_1830">Cerimónia de Encerramento</h3>
                 </div>
-
-                
-                
-
+            </div>
 
         </div>
     </div>
@@ -1178,6 +1107,36 @@ const translations = {
 pt: {
     title: "Moldova Europeia",
 
+    /* Comunicado */
+    nav_noticia: "Declaração",
+    mobile_noticia_desc: "Declaração adotada pela comunidade",
+    news_tag: "Comunicado",
+    news_title: "Cidadãos moldavos reunidos em Portugal adotaram por unanimidade uma declaração de apoio à adesão da República da Moldova à UE",
+    news_dateline: "Loures, República Portuguesa, 8 de novembro de 2026",
+    news_p1: "Os participantes na conferência «Moldova Europeia» adotaram por unanimidade uma declaração de apoio à adesão da República da Moldova à União Europeia. Os promotores desejam que o exemplo seja seguido por outras comunidades moldavas da diáspora, expressando o seu apoio à adesão e envolvendo-se em projetos que contribuam para o desenvolvimento do país.",
+    news_p2: "O evento reuniu representantes da comunidade moldava, das instituições públicas da República da Moldova e de Portugal, do corpo diplomático e do meio empresarial, para debater a integração europeia e as oportunidades de cooperação entre os dois países.",
+    news_p3: "Através da Declaração da comunidade de cidadãos da República da Moldova em Portugal sobre o apoio firme à adesão da República da Moldova à União Europeia, a comunidade transmite uma mensagem de solidariedade e de assunção de um papel ativo na construção do futuro europeu do país. O gesto mostra que a ligação à Moldova pode ser valorizada através do envolvimento cívico, da competência técnica e de iniciativas que apoiam a aproximação à União Europeia.",
+    news_p4: "O Presidente do Parlamento da República da Moldova, Igor Grosu, e o Primeiro-Ministro Vasile Tofan enviaram aos participantes mensagens de apoio, sublinhando que os cidadãos da diáspora podem contribuir para o desenvolvimento da República da Moldova independentemente do país onde residam.",
+    news_p5: "A Vice-Primeira-Ministra para a Integração Europeia, Cristina Gherasimov, interveio em direto e falou sobre as prioridades das negociações de adesão e o contributo dos profissionais da diáspora para este processo.",
+    news_q1: "«Agradeço esta declaração de apoio ao percurso europeu da República da Moldova. Recebo esta mensagem com gratidão e com a confiança de que a amizade entre as nossas comunidades pode aproximar ainda mais os nossos países.",
+    news_q2: "Para os cidadãos da República da Moldova, a vossa solidariedade conta. Encoraja-nos a continuar as reformas e reforça a nossa convicção de que o nosso esforço é compreendido e apoiado por amigos que desejam ver-nos na União Europeia.",
+    news_q3: "Esta declaração tem um significado especial porque vem de uma comunidade em que moldavos e portugueses construíram laços através do trabalho, da amizade e de experiências partilhadas. É um apoio que nasce das pessoas e que dá profundidade à relação entre os nossos países», transmitiu a Vice-Primeira-Ministra para a Integração Europeia.",
+    news_p6: "O programa incluiu mensagens do deputado Valeriu Robu e do cônsul Valentin Munteanu, Primeiro Secretário da Embaixada da República da Moldova em Portugal, bem como intervenções de Marina Bunduchi, consultora principal do Gabinete de Relações com a Diáspora, de Ana Sandra, diretora do Instituto Nacional de Turismo, e de Luminița-Dorina Gudima, especialista principal na atração de investimento da Agência de Investimento «Invest Moldova».",
+    news_p7: "Dirigiram-se também aos presentes, com mensagens de apoio, a Embaixadora da Roménia na República Portuguesa, Daniela Gîtman, e a vice-presidente do município de Loures, Sónia Paixão.",
+    news_p8: "A perspetiva da sociedade civil da diáspora foi apresentada por Natalia Cucoș, cofundadora da Moldova4EU Diaspora Task Force (Viena, Áustria), e por Angela Zgardan, da Associação da Comunidade da Diáspora (Lisboa, Portugal).",
+    news_p9: "A conferência foi organizada pela Associação da Comunidade da Diáspora, em parceria com a Liga das Mulheres, com o apoio do Governo da República da Moldova através do programa Diaspora Engagement Hub e com o acolhimento do município de Loures.",
+    news_p10: "Os organizadores sublinharam que o encontro pretende incentivar tanto a participação cívica da diáspora como os projetos comuns com parceiros da República da Moldova e de Portugal.",
+
+    /* Galeria */
+    nav_galeria: "Galeria",
+    mobile_galeria_desc: "Fotografias do evento",
+    galeria_tag: "Fotografias",
+    galeria_title: "Galeria do Evento",
+    galeria_prev: "Fotografia anterior",
+    galeria_next: "Fotografia seguinte",
+    galeria_desc: "Momentos da Conferência «Moldova Europeia»",
+    hero_photo_alt: "Organização da Conferência «Moldova Europeia»",
+
     /* Organizações */
     inst_brd: "Gabinete de Relações com a Diáspora Moldava (BRD)",
     inst_hub: "Plataforma de Conexão à Diáspora Moldava (DEH)",
@@ -1229,14 +1188,10 @@ pt: {
     form_submit: "Enviar inscrição",
     form_required: "Os campos assinalados com * são obrigatórios.",
 
-    /* Menu / rodapé / vídeo (acessibilidade) */
+    /* Menu / rodapé (acessibilidade) */
     mobile_open: "Abrir menu",
     mobile_close: "Fechar menu",
     hero_logo_alt: "Moldova Europeia",
-    video_seek: "Progresso do vídeo",
-    video_volume: "Volume do vídeo",
-    video_play: "Reproduzir vídeo",
-    video_pause: "Pausar vídeo",
     footer_follow: "Siga-nos",
     footer_org: "ACD - Associação da Comunidade da Diáspora",
     footer_rights: "Todos os direitos reservados.",
@@ -1272,8 +1227,6 @@ pt: {
     hero_desc: "Participe na Conferência «Moldova Europeia» e junte-se a líderes, diplomatas, líderes empresariais, investidores e decisores para um dia de diálogo, cooperação estratégica e oportunidades de networking entre a República da Moldova e Portugal.",
     btn_agenda: "Ver Agenda",
     btn_garantir: "Garantir Lugar",
-    sound_on: "Ativar som",
-    sound_off: "Desativar som",
 
     sobre_card1_title: "Participantes",
     sobre_card1_desc: "Encontro de representantes institucionais, líderes empresariais, investidores e membros da comunidade moldava em Portugal.",
@@ -1321,7 +1274,7 @@ pt: {
     agenda_1430_hino_md: "República da Moldova — interpretado ao vivo por <strong class='text-slate-700'>Ludmila Evtodii</strong>",
     agenda_1430_victor_name: "Victor Țurcanu",
     agenda_1430_victor_cargo: "Presidente da Associação da Comunidade da Diáspora (ACD)",
-    agenda_1430_sonia_name: "Sónia Lopes",
+    agenda_1430_sonia_name: "Sónia Paixão",
     agenda_1430_sonia_cargo: "Vice-Presidente da Câmara Municipal de Loures",
     agenda_1430_consul_name: "Valentin Munteanu",
     agenda_1430_consul_cargo: "Primeiro Secretário da Embaixada da República da Moldova na República Portuguesa",
@@ -1428,6 +1381,36 @@ pt: {
 ro: {
     title: "Moldova Europeană",
 
+    /* Comunicat */
+    nav_noticia: "Declarația",
+    mobile_noticia_desc: "Declarația adoptată de comunitate",
+    news_tag: "Comunicat",
+    news_title: "Cetățenii moldoveni reuniți din Portugalia au adoptat în unanimitate o declarație de susținere a aderării Republicii Moldova la UE",
+    news_dateline: "Loures, Republica Portugheză, 8 noiembrie 2026",
+    news_p1: "Participanții la conferința «Moldova Europeană» au adoptat în unanimitate o declarație de susținere a aderării Republicii Moldova la Uniunea Europeană. Inițiatorii își doresc ca exemplul să fie urmat de alte comunități moldovenești din diaspora, prin exprimarea susținerii pentru aderare și implicarea în proiecte care contribuie la dezvoltarea țării.",
+    news_p2: "Evenimentul a adus împreună reprezentanți ai comunității moldovenești, ai instituțiilor publice din Republica Moldova și Portugalia, ai corpului diplomatic și ai mediului de afaceri, pentru a discuta despre integrarea europeană și oportunitățile de cooperare dintre cele două țări.",
+    news_p3: "Prin Declarația comunității cetățenilor Republicii Moldova din Portugalia privind susținerea fermă a aderării Republicii Moldova la Uniunea Europeană, comunitatea cetățenilor Republicii Moldova din Portugalia transmite un mesaj de solidaritate și de asumare a unui rol activ în construirea viitorului european al țării. Gestul arată că legătura cu Moldova poate fi valorificată prin implicare civică, expertiză și inițiative care sprijină apropierea de Uniunea Europeană.",
+    news_p4: "Președintele Parlamentului Republicii Moldova, Igor Grosu și Prim-ministrul Vasile Tofan au transmis participanților la eveniment mesaje de susținere, subliniind că cetățenii din diaspora pot contribui la dezvoltarea Republicii Moldova indiferent de țara în care locuiesc.",
+    news_p5: "Viceprim-ministra pentru integrare europeană, Cristina Gherasimov, a intervenit în direct și a vorbit despre prioritățile negocierilor de aderare și contribuția profesioniștilor din diaspora la acest proces.",
+    news_q1: "„Vă mulțumesc pentru această declarație de susținere a parcursului european al Republicii Moldova. Primesc acest mesaj cu recunoștință și cu încrederea că prietenia dintre comunitățile noastre poate aduce țările noastre și mai aproape.",
+    news_q2: "Pentru cetățenii Republicii Moldova, solidaritatea dumneavoastră contează. Ea ne încurajează să continuăm reformele și ne întărește convingerea că efortul nostru este înțeles și susținut de prieteni care își doresc să ne vadă alături, în Uniunea Europeană.",
+    news_q3: "Această declarație are o semnificație aparte pentru că vine dintr-o comunitate în care moldovenii și portughezii au construit legături prin muncă, prin prietenie și prin experiențe împărtășite. Este o susținere care pornește de la oameni și care dă profunzime relației dintre țările noastre”, a transmis viceprim-ministra pentru integrare europeană.",
+    news_p6: "Programul a inclus mesaje din partea deputatului Valeriu Robu și a consulului Valentin Munteanu, secretar I în cadrul Ambasadei Republicii Moldova în Portugalia, precum și intervenții ale Marinei Bunduchi, consultant principal în cadrul Biroului Relații cu Diaspora, ale Anei Sandra, directoarea Oficiului Național al Turismului, și ale Luminiței-Dorina Gudima, specialistă principală în atragerea investițiilor în cadrul Agenției de Investiții „Invest Moldova”.",
+    news_p7: "Cu mesaje de susținere s-au adresat și Ambasadoarea României în Republica Portugheză, Daniela Gîtman, precum și viceprimarul municipalității Loures, Sónia Paixão.",
+    news_p8: "Perspectiva societății civile din diaspora a fost prezentată de Natalia Cucoș, cofondatoare a Moldova4EU Diaspora Task Force (Viena, Austria) și de Angela Zgardan de la Asociația Comunitatea Diasporei (Lisabona, Portugalia).",
+    news_p9: "Conferința a fost organizată de Asociația Comunitatea Diasporei, în parteneriat cu Liga Femeilor, cu sprijinul Guvernului Republicii Moldova prin programul Diaspora Engagement Hub și cu găzduirea municipalității Loures.",
+    news_p10: "Organizatorii au subliniat că întâlnirea urmărește să încurajeze atât participarea civică a diasporei, cât și proiectele comune cu parteneri din Republica Moldova și Portugalia.",
+
+    /* Galerie */
+    nav_galeria: "Galerie",
+    mobile_galeria_desc: "Fotografii de la eveniment",
+    galeria_tag: "Fotografii",
+    galeria_title: "Galeria Evenimentului",
+    galeria_prev: "Fotografia anterioară",
+    galeria_next: "Fotografia următoare",
+    galeria_desc: "Momente de la Conferința „Moldova Europeană”",
+    hero_photo_alt: "Organizatorii Conferinței „Moldova Europeană”",
+
     /* Organizații */
     inst_acd: "Asociația Comunității Diasporei (ACD)",
     inst_gov_moldova: "Guvernul Republicii Moldova",
@@ -1479,14 +1462,10 @@ ro: {
     form_submit: "Trimiteți înscrierea",
     form_required: "Câmpurile marcate cu * sunt obligatorii.",
 
-    /* Meniu / subsol / video (accesibilitate) */
+    /* Meniu / subsol (accesibilitate) */
     mobile_open: "Deschideți meniul",
     mobile_close: "Închideți meniul",
     hero_logo_alt: "Moldova Europeană",
-    video_seek: "Progresul videoclipului",
-    video_volume: "Volumul videoclipului",
-    video_play: "Redă videoclipul",
-    video_pause: "Pauză videoclip",
     footer_follow: "Urmăriți-ne",
     footer_org: "ACD - Asociația Comunității Diasporei",
     footer_rights: "Toate drepturile rezervate.",
@@ -1522,8 +1501,6 @@ ro: {
     hero_desc: "Participați la Conferința „Moldova Europeană” și alăturați-vă liderilor, diplomaților, oameni de afaceri și investitorilor pentru o zi dedicată dialogului, cooperării strategice și oportunităților de networking între Republica Moldova și Portugalia.",
     btn_agenda: "Vezi Agenda",
     btn_garantir: "Rezervă un loc",
-    sound_on: "Activează sunetul",
-    sound_off: "Dezactivează sunetul",
 
     sobre_card1_title: "Participanți",
     sobre_card1_desc: "Reuniune a reprezentanților instituționali, liderilor de afaceri, investitorilor și membrilor comunității moldovenești din Portugalia.",
@@ -1572,7 +1549,7 @@ ro: {
     agenda_1430_hino_md: "Republica Moldova — interpretat live de <strong class='text-slate-700'>Ludmila Evtodii</strong>",
     agenda_1430_victor_name: "Victor Țurcanu",
     agenda_1430_victor_cargo: "Președintele Asociației Comunitatea Diasporei (ACD)",
-    agenda_1430_sonia_name: "Sónia Lopes",
+    agenda_1430_sonia_name: "Sónia Paixão",
     agenda_1430_sonia_cargo: "Vicepreședinta Primăriei Municipiului Loures",
     agenda_1430_consul_name: "Valentin Munteanu",
     agenda_1430_consul_cargo: "Prim-secretar al Ambasadei Republicii Moldova în Republica Portugheză",
@@ -1703,20 +1680,6 @@ function applyLanguage(lang) {
         if (t[key]) element.setAttribute("placeholder", t[key]);
     });
 
-    /* Vídeo do hero: RO usa Conferinta.mp4 (5:4); PT usa videopt.mp4 (quadrado) */
-    const heroVideo = document.getElementById("hero-video");
-    const heroContainer = document.getElementById("hero-container");
-    const VIDEO_PT = "https://pub-2744c7b19363448b902c1ee8ac751cb2.r2.dev/videopt.mp4";
-    const VIDEO_RO = "https://pub-de7f6c74fca047468aa89fec11e90491.r2.dev/Conferinta.mp4";
-    const ficheiro = lang === "ro" ? VIDEO_RO : VIDEO_PT;
-
-    if (heroVideo && heroVideo.getAttribute("src") !== ficheiro) {
-        heroVideo.setAttribute("src", ficheiro);
-        heroVideo.load();
-        heroVideo.play().catch(() => {});
-    }
-    if (heroContainer) heroContainer.classList.toggle("video-ro", lang === "ro");
-
     /* alt das imagens: reaproveita o texto já traduzido */
     document.querySelectorAll("#organizacoes a").forEach(a => {
         const img = a.querySelector("img"), h = a.querySelector("h3");
@@ -1730,9 +1693,6 @@ function applyLanguage(lang) {
 
     document.documentElement.lang = lang;
     if (t.title) document.title = t.title;
-
-    /* avisa o script do vídeo para atualizar os aria-labels */
-    document.dispatchEvent(new Event("langchange"));
 }
 
 languageSelector.addEventListener("change", function (event) {
@@ -1818,75 +1778,116 @@ if (inscricaoForm) {
     });
 }
 
+/* =========================================================
+   GALERIA DE FOTOGRAFIAS (setas + movimento automático)
+   ---------------------------------------------------------
+   >>> AS FOTOGRAFIAS DO EVENTO ESTÃO NESTA LISTA <<<
+   Os ficheiros devem estar na pasta "fotos", ao lado do index.html.
+   Atenção: o nome tem de ser exatamente igual ao do ficheiro,
+   incluindo a extensão (.jpg ou .jpeg).
+========================================================= */
+const FOTOS = [
+    "fotos/evento1.jpg",
+    "fotos/evento2.jpeg",
+    "fotos/evento3.jpg",
+    "fotos/evento4.jpeg",
+    "fotos/evento5.jpg",
+    "fotos/evento6.jpeg",
+    "fotos/evento7.jpg",
+    "fotos/evento8.jpeg",
+    "fotos/evento9.jpg",
+    "fotos/evento10.jpg",
+    "fotos/evento11.jpeg",
+];
+
+(function montarGaleria() {
+    const sc   = document.getElementById("gallery-scroller");
+    const prev = document.getElementById("gallery-prev");
+    const next = document.getElementById("gallery-next");
+    if (!sc) return;
+
+    const temFotos = FOTOS.length > 0;
+    let itens = temFotos
+        ? FOTOS.map((src, i) => `<div class="gallery-item"><img src="${src}" alt="Moldova Europeia — foto ${i + 1}" loading="lazy"></div>`)
+        : Array.from({ length: 8 }, () => `<div class="gallery-item gallery-placeholder"><i class="fa-solid fa-camera"></i><span>Foto do evento</span></div>`);
+
+    /* garante que um conjunto é bem mais largo do que o ecrã */
+    while (itens.length < 8) itens = itens.concat(itens);
+
+    /* 3 cópias idênticas: permite voltar atrás/avançar sem fim e sem saltos visíveis */
+    sc.innerHTML = itens.join("") + itens.join("") + itens.join("");
+
+    let setW = 0, pos = 0, pausedUntil = 0, hover = false;
+    const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function medir() {
+        setW = sc.scrollWidth / 3;
+        pos = setW;
+        sc.scrollLeft = setW;
+    }
+
+    function passo() {
+        const it = sc.querySelector(".gallery-item");
+        return it.offsetWidth + parseFloat(getComputedStyle(it).marginRight);
+    }
+
+    /* mantém o scroll na cópia do meio (as 3 cópias são iguais, por isso não se nota) */
+    function normalizar() {
+        if (sc.scrollLeft < setW * 0.5) sc.scrollLeft += setW;
+        else if (sc.scrollLeft >= setW * 1.5) sc.scrollLeft -= setW;
+        pos = sc.scrollLeft;
+    }
+
+    function ir(direcao) {
+        pausedUntil = performance.now() + 4000;
+        normalizar();
+        sc.scrollBy({ left: direcao * passo(), behavior: "smooth" });
+    }
+
+    prev.addEventListener("click", () => ir(-1));
+    next.addEventListener("click", () => ir(1));
+
+    /* setas do teclado quando a galeria tem o foco */
+    sc.setAttribute("tabindex", "0");
+    sc.addEventListener("keydown", e => {
+        if (e.key === "ArrowLeft")  { e.preventDefault(); ir(-1); }
+        if (e.key === "ArrowRight") { e.preventDefault(); ir(1); }
+    });
+
+    /* pausa com o rato por cima ou ao tocar/arrastar */
+    sc.addEventListener("mouseenter", () => { hover = true; });
+    sc.addEventListener("mouseleave", () => { hover = false; });
+    sc.addEventListener("pointerdown", () => { pausedUntil = performance.now() + 3500; });
+    sc.addEventListener("wheel", () => { pausedUntil = performance.now() + 3500; }, { passive: true });
+
+    let fim;
+    sc.addEventListener("scroll", () => {
+        clearTimeout(fim);
+        fim = setTimeout(() => { if (performance.now() > pausedUntil - 3000) normalizar(); }, 180);
+    });
+
+    /* movimento automático, lento e contínuo */
+    function tick(t) {
+        if (!reduzir && !hover && t > pausedUntil) {
+            if (Math.abs(sc.scrollLeft - pos) > 2) pos = sc.scrollLeft;
+            pos += 0.6;
+            sc.scrollLeft = pos;
+            if (sc.scrollLeft >= setW * 1.5) { sc.scrollLeft -= setW; pos = sc.scrollLeft; }
+        } else {
+            pos = sc.scrollLeft;
+        }
+        requestAnimationFrame(tick);
+    }
+
+    medir();
+    window.addEventListener("resize", medir);
+    window.addEventListener("load", medir);
+    requestAnimationFrame(tick);
+})();
+
 /* Inicializa PT */
 applyLanguage("pt");
 
-</script>
-
-<script>
-(function () {
-    const video = document.getElementById("hero-video");
-    const container = document.getElementById("hero-container");
-    if (!video) return;
-
-    video.volume = 0.5;
-
-    /* ---------- SOM ---------- */
-    /* 1.º: tenta arrancar com som */
-    video.muted = false;
-    video.play().catch(() => {
-        /* Bloqueado pelo navegador: arranca mudo e liga o som na 1.ª interação */
-        video.muted = true;
-        video.play().catch(() => {});
-
-        const eventos = ["pointerdown", "click", "touchstart", "touchend", "keydown"];
-        function ativarSom() {
-            video.muted = false;
-            video.volume = 0.5;
-            video.play().catch(() => {});
-            eventos.forEach(ev => document.removeEventListener(ev, ativarSom, true));
-        }
-        eventos.forEach(ev => document.addEventListener(ev, ativarSom, true));
-    });
-
-    /* ---------- BARRA DE CONTROLOS: some ao fim de 2 s ou quando o rato sai ---------- */
-    if (!container) return;
-
-    const HIDE_DELAY = 2000;
-    let timer = null;
-    let aInteragir = false; /* a arrastar a barra do vídeo ou do volume */
-
-    function mostrar() {
-        container.classList.add("show-controls");
-        clearTimeout(timer);
-        timer = setTimeout(esconder, HIDE_DELAY);
-    }
-    function esconder() {
-        if (aInteragir) { timer = setTimeout(esconder, HIDE_DELAY); return; }
-        container.classList.remove("show-controls");
-        clearTimeout(timer);
-    }
-
-    container.addEventListener("pointerenter", mostrar);
-    container.addEventListener("pointermove", mostrar);
-    container.addEventListener("pointerdown", mostrar);
-    container.addEventListener("pointerleave", (e) => {
-        if (e.pointerType === "mouse") { aInteragir = false; esconder(); }
-    });
-    container.addEventListener("focusin", mostrar);
-
-    const controlos = document.getElementById("hero-controls");
-    if (controlos) {
-        controlos.addEventListener("pointerdown", () => { aInteragir = true; });
-    }
-    document.addEventListener("pointerup", () => {
-        if (aInteragir) { aInteragir = false; mostrar(); }
-    });
-    document.addEventListener("pointercancel", () => { aInteragir = false; });
-
-    /* À entrada no site mostra a barra e esconde-a ao fim de 2 s */
-    mostrar();
-})();
 </script>
 
 </body>
