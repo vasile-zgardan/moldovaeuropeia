@@ -295,15 +295,18 @@ body.modal-open{overflow:hidden;}
 
     <header class="text-center mb-10">
 
-      <span class="text-blue-600 font-semibold text-sm uppercase tracking-wider">
+      <span data-i18n="decl_tag"
+        class="text-blue-600 font-semibold text-sm uppercase tracking-wider">
         Documento oficial
       </span>
 
-      <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">
+      <h2 data-i18n="decl_title"
+        class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">
         Declaração da Comunidade
       </h2>
 
-      <p class="text-slate-600 mt-3 max-w-2xl mx-auto">
+      <p data-i18n="decl_desc"
+        class="text-slate-600 mt-3 max-w-2xl mx-auto">
         Consulte o documento assinado pelos participantes da Conferência «Moldova Europeia».
       </p>
 
@@ -313,85 +316,35 @@ body.modal-open{overflow:hidden;}
 
       <!-- Barra de ferramentas -->
 
-      <div class="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-3 border-b border-slate-200">
-
-        <div class="flex items-center gap-2">
-
-          <button id="pdf-zoom-out"
-            type="button"
-            aria-label="Diminuir zoom"
-            class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 flex items-center justify-center">
-            −
-          </button>
-
-          <span id="pdf-zoom-label"
-            class="w-14 text-center text-sm font-semibold text-slate-700">
-            100%
-          </span>
-
-          <button id="pdf-zoom-in"
-            type="button"
-            aria-label="Aumentar zoom"
-            class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 flex items-center justify-center">
-            +
-          </button>
-
-          <button id="pdf-zoom-fit"
-            type="button"
-            class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 text-xs">
-            Ajustar
-          </button>
-
-        </div>
+      <div class="flex items-center justify-end px-4 sm:px-6 py-3 border-b border-slate-200">
 
         <a href="declaracao.pdf"
           download="Declaracao-Moldova-Europeia.pdf"
           class="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold px-5 py-3 rounded-xl transition">
 
           <i class="fa-solid fa-download"></i>
-          Descarregar PDF
+          <span data-i18n="decl_download">Descarregar PDF</span>
 
         </a>
 
       </div>
 
-      <!-- Área do documento -->
+      <!-- Documento (visualizador nativo do browser) -->
 
-      <div id="pdf-wrap"
-        class="relative bg-slate-200 overflow-auto p-4"
-        style="height:min(78vh,1000px); min-height:420px;">
+      <div class="bg-slate-200">
 
-        <div id="pdf-pages"
-          class="flex flex-col items-center gap-6">
-        </div>
-
-        <div id="pdf-loading"
-          class="absolute inset-0 flex items-center justify-center text-slate-500 text-sm bg-slate-200">
-
-          A carregar documento...
-
-        </div>
-
-        <div id="pdf-error"
-          class="hidden absolute inset-0 flex-col items-center justify-center text-center px-6 bg-slate-200">
-
-          <p class="font-semibold text-slate-700">
-            Não foi possível apresentar o documento.
-          </p>
-
-          <p class="text-sm text-slate-500 mt-2">
-            Utilize o botão de descarregamento para consultar o PDF.
-          </p>
-
-        </div>
+        <iframe
+          src="declaracao.pdf#view=FitH"
+          title="Declaração da Comunidade"
+          data-i18n="decl_iframe_title"
+          data-i18n-attr="title"
+          class="w-full border-0 block"
+          style="height:min(78vh,1000px); min-height:420px;">
+        </iframe>
 
       </div>
 
     </div>
-
-    <p class="text-center text-xs text-slate-500 mt-4">
-      Utilize + e − para ampliar o documento.
-    </p>
 
   </div>
 
@@ -1339,6 +1292,13 @@ pt: {
     btn_agenda: "Ver Agenda",
     btn_garantir: "Garantir Lugar",
 
+        /* Declaração (PDF) */
+    decl_tag: "Documento oficial",
+    decl_title: "Declaração da Comunidade",
+    decl_desc: "Consulte o documento assinado pelos participantes da Conferência «Moldova Europeia».",
+    decl_download: "Descarregar PDF",
+    decl_iframe_title: "Declaração da Comunidade",
+
     sobre_card1_title: "Participantes",
     sobre_card1_desc: "Encontro de representantes institucionais, líderes empresariais, investidores e membros da comunidade moldava em Portugal.",
     sobre_card2_title: "Oradores",
@@ -1606,6 +1566,13 @@ ro: {
     mobile_oradores_desc: "Invitați și participanți",
     mobile_agenda_desc: "Programul evenimentului",
     mobile_localizacao_desc: "Locul desfășurării",
+
+        /* Declarație (PDF) */
+    decl_tag: "Document oficial",
+    decl_title: "Declarația Comunității",
+    decl_desc: "Consultați documentul semnat de participanții la Conferința „Moldova Europeană”.",
+    decl_download: "Descărcați PDF",
+    decl_iframe_title: "Declarația Comunității",
 
     hero_date: "8 noiembrie 2026",
     hero_title: "Moldova Europeană",
